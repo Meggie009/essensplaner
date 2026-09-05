@@ -145,39 +145,3 @@ npm run dev
 4. Push to `main`. `.github/workflows/deploy.yml` builds the app with
    `npm run build` and publishes the `dist/` folder automatically.
 
-Your site will be live at `https://<username>.github.io/<repo-name>/`.
-
----
-
-## 6. Decisions made (and why)
-
-Kept here so future changes stay consistent with the reasoning:
-
-- **Category meaning is "main ingredient type", not weekday.** The original
-  data source grouped meals by the day they were planned for; that's gone.
-  `category` now describes what kind of dish it is, which is more useful for
-  browsing and doesn't tie a meal to a fixed day.
-- **No persistence of selection across reloads.** Selection lives in an
-  in-memory Svelte store; refreshing clears it. Deliberate simplicity
-  trade-off — no localStorage sync logic to maintain.
-- **Free selection, no per-day/category limit.** Any number of meals from
-  any categories can be selected at once.
-- **Effort is a simple 3-level enum**, not minutes or stars — easiest to
-  assign consistently by hand, and enough resolution to be useful at a
-  glance.
-- **One markdown file per meal, plain-text ingredients, no ingredient
-  catalog.** Originally meals lived in one big JSON file referencing
-  ingredient ids from a separate catalog. That made adding a meal
-  error-prone (JSON punctuation, needing to check/add catalog entries).
-  Markdown files with plain ingredient names removed both problems, at the
-  cost of needing consistent spelling for ingredients to aggregate
-  correctly across meals.
-- **Categories centralized in one file (`categories.js`).** Keeps the
-  section list, its display order, and the valid `category` values for meal
-  files all defined in exactly one place instead of being implicit in
-  `App.svelte`.
-- **Plain Vite + Svelte, not SvelteKit.** Single page, no routing needs, so
-  SvelteKit's adapter/prerendering setup would be pure overhead.
-- **GitHub Actions handles the GitHub Pages deploy**, rather than a manual
-  `gh-pages` branch push — builds and publishes automatically on every push
-  to `main`.
