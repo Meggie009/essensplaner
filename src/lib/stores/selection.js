@@ -1,6 +1,5 @@
 import { writable, derived } from 'svelte/store';
-import meals from '../data/meals.json';
-import ingredients from '../data/ingredients.json';
+import { meals } from '../data/meals.js';
 
 // Set of selected meal ids. No persistence (resets on reload) by design.
 export const selectedIds = writable(new Set());
@@ -26,13 +25,20 @@ export const selectedMeals = derived(selectedIds, ($ids) =>
 );
 
 export const aggregatedIngredients = derived(selectedMeals, ($meals) => {
-  const counts = {};
+  // Group by normalized (trimmed, lowercased) name, since ingredients are now
+  // just plain text per meal file rather than references into a shared
+  // catalog. The first-seen casing is kept for display.
+  const counts = new Map();
   for (const meal of $meals) {
     for (const ing of meal.ingredients) {
-      counts[ing.id] = (counts[ing.id] || 0) + (ing.qty ?? 1);
+      const key = ing.name.trim().toLowerCase();
+      const existing = counts.get(key);
+      if (existing) {
+        existing.qty += ing.qty ?? 1;
+      } else {
+        counts.set(key, { name: ing.name.trim(), qty: ing.qty ?? 1 });
+      }
     }
   }
-  return Object.entries(counts)
-    .map(([id, qty]) => ({ id, name: ingredients[id] ?? id, qty }))
-    .sort((a, b) => a.name.localeCompare(b.name, 'de'));
+  return [...counts.values()].sort((a, b) => a.name.localeCompare(b.name, 'de'));
 });

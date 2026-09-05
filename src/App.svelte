@@ -1,5 +1,5 @@
 <script>
-  import meals from './lib/data/meals.json';
+  import { meals } from './lib/data/meals.js'
   import CategorySection from './lib/components/CategorySection.svelte';
   import SelectedMealsPanel from './lib/components/SelectedMealsPanel.svelte';
   import IngredientsPanel from './lib/components/IngredientsPanel.svelte';
