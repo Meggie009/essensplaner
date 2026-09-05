@@ -63,7 +63,7 @@ the new `key` right away.
 
 ## 3. Meal data structure
 
-Each meal is its own file in **`src/lib/data/meals/`**, parsed automatically
+Each meal is its own file in **`src/lib/data/meals/`** [here](https://github.com/Meggie009/essensplaner/tree/main/src/lib/data/meals), parsed automatically
 at build time (`src/lib/data/meals.js`) — there's no central list to edit or
 break, no ids to invent, and no separate ingredient catalog to keep in sync.
 
