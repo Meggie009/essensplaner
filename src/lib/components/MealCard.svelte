@@ -25,6 +25,8 @@
   on:keydown={handleKeydown}
 >
   <div class="top-row">
+    <div class="name">{meal.name}</div>
+    <span class="effort effort-{meal.effort}">{effortLabel[meal.effort] ?? meal.effort}</span>
     <!-- svelte-ignore a11y-label-has-associated-control -->
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
@@ -36,8 +38,6 @@
         aria-label={`${meal.name} auswählen`}
       />
     </label>
-    <div class="name">{meal.name}</div>
-    <span class="effort effort-{meal.effort}">{effortLabel[meal.effort] ?? meal.effort}</span>
   </div>
 
   {#if expanded}
