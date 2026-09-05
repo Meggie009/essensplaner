@@ -50,6 +50,10 @@
   </footer>
 </main>
 
+<div class="impressum">
+  <p>Made by <a href="https://github.com/Meggie009/essensplaner" target="_blank" rel="noopener noreferrer">Magdalena</a></p>
+</div>
+
 <style>
   main {
     max-width: 900px;
@@ -95,6 +99,22 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
+  }
+
+    .impressum {
+    text-align: center;
+    padding: 2rem 1.5rem 1.5rem;
+    font-size: 0.75rem;
+    color: #999;
+  }
+  
+  .impressum a {
+    color: #999;
+    text-decoration: none;
+  }
+  
+  .impressum a:hover {
+    text-decoration: underline;
   }
 
   @media (max-width: 640px) {
