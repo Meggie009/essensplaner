@@ -1,6 +1,6 @@
 ---
-category: sonstige
-effort: medium
+category: teig
+effort: easy
 ---
 # Wraps mit Feta und Salat
 
@@ -12,3 +12,4 @@ effort: medium
 - Knoblauch
 - Mais
 - Pilze
+- veganes Geschnetzeltes

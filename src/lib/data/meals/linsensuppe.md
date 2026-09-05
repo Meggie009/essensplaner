@@ -1,6 +1,6 @@
 ---
-category: linsen
-effort: easy
+category: hülsenfrüchte, suppen
+effort: medium
 ---
 # Linsensuppe
 

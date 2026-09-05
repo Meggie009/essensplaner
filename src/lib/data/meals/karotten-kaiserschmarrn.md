@@ -1,6 +1,6 @@
 ---
 category: teig
-effort: medium
+effort: hard
 ---
 # Karotten-Kaiserschmarrn
 

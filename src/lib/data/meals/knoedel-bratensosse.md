@@ -1,11 +1,10 @@
 ---
-category: teig
+category: feiertag
 effort: hard
 ---
 # Knödel mit Bratensoße
 
-- Kartoffeln
-- Kartoffelmehl
+
 - Knödelteig
 - Petersilie
 - Rotkraut

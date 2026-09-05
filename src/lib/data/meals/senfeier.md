@@ -1,6 +1,6 @@
 ---
-category: kartoffeln
-effort: hard
+category: feiertag
+effort: medium
 ---
 # Senfeier
 

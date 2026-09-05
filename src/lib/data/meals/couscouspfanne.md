@@ -1,6 +1,6 @@
 ---
 category: couscous
-effort: medium
+effort: easy
 ---
 # Couscouspfanne
 

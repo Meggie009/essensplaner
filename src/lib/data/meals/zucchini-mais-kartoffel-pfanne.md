@@ -6,7 +6,7 @@ effort: medium
 
 - Zwiebel
 - Kartoffeln
-- Zuccini
+- Zucchini
 - Feta
 - Crème Fraîche
 - Pilze

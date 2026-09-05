@@ -4,7 +4,7 @@ effort: easy
 ---
 # Ratatouille
 
-- Zuccini
+- Zucchini
 - Paprika
 - Zwiebel
 - Knoblauch

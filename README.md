@@ -50,7 +50,11 @@ for which `category:` values a meal file can use. Current list:
 | `reis`       | Reis           |
 | `couscous`   | Couscous       |
 | `teig`       | Teig / Gebäck  |
-| `sonstige`   | Sonstiges      |
+| `feiertag`   | Feiertag       |
+| `suppen`     | Suppen & Eintöpfe |
+| `hülsenfrüchte`     | Hülsenfrüchte |
+| `gemüse`     | Gemüse        |
+
 
 The order of this list is also the display order of the sections on the
 page.

@@ -1,6 +1,6 @@
 ---
 category: teig
-effort: easy
+effort: hard
 ---
 # Pfannkuchen mit Apfel
 

@@ -1,13 +1,13 @@
 ---
 category: teig
-effort: medium
+effort: easy
 ---
 # Quiche mit Gemüse
 
 - Zwiebel
 - Quicheteig
 - Schmand
-- Zuccini
+- Zucchini
 - Paprika
 - Tomate
 - Feta

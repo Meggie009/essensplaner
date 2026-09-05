@@ -1,6 +1,6 @@
 ---
-category: teig
-effort: medium
+category: feiertag
+effort: hard
 ---
 # Mehlknepp
 

@@ -1,5 +1,5 @@
 ---
-category: sonstige
+category: hülsenfrüchte
 effort: medium
 ---
 # Bratlinge

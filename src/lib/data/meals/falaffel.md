@@ -1,8 +1,8 @@
 ---
-category: sonstige
-effort: easy
+category: hülsenfrüchte
+effort: medium
 ---
-# Falaffel
+# Falaffel mit Zimtkarotten
 
 - Zwiebel
 - Karotte (5)

@@ -1,5 +1,5 @@
 ---
-category: linsen
+category: hülsenfrüchte, suppen
 effort: medium
 ---
 # Mercimek-mek

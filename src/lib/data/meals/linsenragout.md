@@ -1,5 +1,5 @@
 ---
-category: linsen
+category: hülsenfrüchte, nudeln
 effort: medium
 ---
 # Linsenragout

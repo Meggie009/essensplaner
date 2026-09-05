@@ -1,5 +1,5 @@
 ---
-category: linsen
+category: hülsenfrüchte, suppen
 effort: hard
 ---
 # Chilli con Linsen

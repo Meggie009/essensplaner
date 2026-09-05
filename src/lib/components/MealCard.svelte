@@ -14,7 +14,7 @@
   let expanded = false;
   let newIngredientText = '';
 
-  const effortLabel = { easy: 'einfach', medium: 'mittel', hard: 'aufwändig' };
+  const effortLabel = { easy: 'schnell', medium: 'mittel', hard: 'aufwändig' };
 
   $: customization = $mealCustomizations.get(meal.id) ?? { unchecked: new Set(), extra: [] };
   $: baseIngredients = meal.ingredients.map((ing) => ({

@@ -14,4 +14,4 @@ effort: hard
 - grüne Bohnen
 - rote Bohnen
 - Mais
-- Zuccini
+- Zucchini

@@ -1,6 +1,6 @@
 ---
-category: sonstige
-effort: easy
+category: teig
+effort: medium
 ---
 # Wraps mit Süßkartoffel
 

@@ -5,9 +5,11 @@
 export const categories = [
   { key: 'nudeln', label: 'Nudeln' },
   { key: 'kartoffeln', label: 'Kartoffeln' },
-  { key: 'linsen', label: 'Linsen' },
+  { key: 'hülsenfrüchte', label: 'Hülsenfrüchte' },
   { key: 'reis', label: 'Reis' },
+  { key: 'suppen', label: 'Suppen & Eintöpfe' },
+  { key: 'gemüse', label: 'Gemüse' },
   { key: 'couscous', label: 'Couscous' },
-  { key: 'teig', label: 'Teig / Gebäck' },
-  { key: 'sonstige', label: 'Sonstiges' }
+  { key: 'teig', label: 'Teig' },
+  { key: 'feiertag', label: 'Feiertag' }
 ];

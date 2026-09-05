@@ -1,5 +1,5 @@
 ---
-category: sonstige
+category: gemüse
 effort: medium
 ---
 # Ofenkäse

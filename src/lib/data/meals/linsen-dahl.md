@@ -1,5 +1,5 @@
 ---
-category: linsen
+category: hülsenfrüchte
 effort: medium
 ---
 # Linsen Dahl

@@ -1,8 +1,8 @@
 ---
-category: teig
+category: feiertag
 effort: medium
 ---
-# Gefüllte
+# Gefüllde
 
 - Knödelteig
 - Sauerkraut

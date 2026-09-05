@@ -1,5 +1,5 @@
 ---
-category: teig
+category: feiertags
 effort: medium
 ---
 # Chatschapuri

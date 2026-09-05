@@ -1,6 +1,6 @@
 ---
 category: reis
-effort: medium
+effort: hard
 ---
 # Curry
 

@@ -1,5 +1,5 @@
 ---
-category: kartoffeln
+category: gemüse
 effort: easy
 ---
 # rote Beete

@@ -1,6 +1,6 @@
 ---
-category: kartoffeln
-effort: medium
+category: feiertag
+effort: hard
 ---
 # Gulasch
 

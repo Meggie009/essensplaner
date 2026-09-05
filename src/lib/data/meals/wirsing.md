@@ -1,6 +1,6 @@
 ---
-category: kartoffeln
-effort: easy
+category: gemüse
+effort: hard
 ---
 # Wirsing
 

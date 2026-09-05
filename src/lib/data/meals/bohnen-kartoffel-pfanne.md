@@ -1,6 +1,6 @@
 ---
 category: kartoffeln
-effort: easy
+effort: medium
 ---
 # Bohnen-Kartoffel-Pfanne
 

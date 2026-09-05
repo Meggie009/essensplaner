@@ -1,6 +1,6 @@
 ---
-category: sonstige
-effort: medium
+category: suppen
+effort: easy
 ---
 # Süßkartoffelsuppe
 

@@ -2,11 +2,11 @@
 category: kartoffeln
 effort: medium
 ---
-# Schnabuträmata
+# Schnabutrömata
 
 - Zwiebel
 - Kartoffeln
-- Zuccini
+- Zucchini
 - Feta
 - Crème Fraîche
 - Pilze

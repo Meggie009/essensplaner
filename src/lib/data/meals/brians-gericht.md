@@ -1,6 +1,6 @@
 ---
 category: couscous
-effort: easy
+effort: medium
 ---
 # Brians Gericht
 

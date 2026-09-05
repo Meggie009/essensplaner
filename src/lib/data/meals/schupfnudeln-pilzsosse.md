@@ -1,6 +1,6 @@
 ---
-category: kartoffeln
-effort: easy
+category: nudeln
+effort: medium
 ---
 # Schupfnudeln mit Pilzsoße
 

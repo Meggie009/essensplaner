@@ -1,5 +1,5 @@
 ---
-category: kartoffeln
+category: nudeln
 effort: easy
 ---
 # Gnoccis mit Sahnesoße

@@ -11,5 +11,6 @@ effort: medium
 - Pilze
 - Ingwer
 - Zwiebel
+- Räuchertofu
 - Sojasoße
 - Knoblauch

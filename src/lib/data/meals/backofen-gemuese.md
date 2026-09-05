@@ -1,5 +1,5 @@
 ---
-category: kartoffeln
+category: gemüse
 effort: medium
 ---
 # Backofen Gemüse

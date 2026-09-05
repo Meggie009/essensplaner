@@ -15,4 +15,4 @@ effort: hard
 - Milch
 - süße Schlagsahne
 - Reibekäse
-- Zuccini
+- Zucchini

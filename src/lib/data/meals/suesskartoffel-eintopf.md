@@ -1,5 +1,5 @@
 ---
-category: sonstige
+category: suppe, gemüse
 effort: easy
 ---
 # Süßkartoffel Eintopf

@@ -1,5 +1,5 @@
 ---
-category: kartoffeln
+category: suppen
 effort: easy
 ---
 # Kürbissuppe

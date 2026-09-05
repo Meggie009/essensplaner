@@ -1,5 +1,5 @@
 ---
-category: sonstige
+category: feiertag
 effort: hard
 ---
 # Königsberger Klopse

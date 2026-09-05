@@ -1,5 +1,5 @@
 ---
-category: teig
+category: nudeln
 effort: easy
 ---
 # Maultaschenpfanne
