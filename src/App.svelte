@@ -1,9 +1,15 @@
 <script>
-  import { meals } from './lib/data/meals.js'
+  import { meals } from './lib/data/meals.js';
   import CategorySection from './lib/components/CategorySection.svelte';
   import SelectedMealsPanel from './lib/components/SelectedMealsPanel.svelte';
   import IngredientsPanel from './lib/components/IngredientsPanel.svelte';
+  import SelectionBadge from './lib/components/SelectionBadge.svelte';
   import { selectedIds, toggleMeal, clearSelection, selectedMeals, aggregatedIngredients } from './lib/stores/selection.js';
+
+  let footerEl;
+  function jumpToExport() {
+    footerEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   const categoryLabels = {
     nudeln: 'Nudeln',
@@ -25,6 +31,8 @@
     .filter((g) => g.meals.length > 0);
 </script>
 
+<SelectionBadge count={$selectedMeals.length} onJump={jumpToExport} />
+
 <main>
   <h1>🍽️ Essensplan</h1>
 
@@ -37,7 +45,7 @@
     />
   {/each}
 
-  <footer>
+  <footer bind:this={footerEl}>
     <div class="footer-header">
       <h2>Auswahl</h2>
       {#if $selectedMeals.length > 0}
