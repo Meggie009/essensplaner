@@ -37,16 +37,15 @@
       />
     </label>
     <div class="name">{meal.name}</div>
-  </div>
-
-  <div class="meta">
     <span class="effort effort-{meal.effort}">{effortLabel[meal.effort] ?? meal.effort}</span>
   </div>
 
   {#if expanded}
-    <div class="ingredient-list">
-      {meal.ingredients.map((ing) => (ing.qty > 1 ? `${ing.name} (${ing.qty})` : ing.name)).join(', ')}
-    </div>
+    <ul class="ingredient-list">
+      {#each meal.ingredients as ing}
+        <li>{ing.qty > 1 ? `${ing.name} (${ing.qty})` : ing.name}</li>
+      {/each}
+    </ul>
   {/if}
 </div>
 
@@ -74,14 +73,13 @@
 
   .top-row {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.5rem;
   }
 
   .checkbox-wrap {
     display: flex;
     align-items: center;
-    padding-top: 0.15rem;
     cursor: pointer;
   }
 
@@ -92,16 +90,13 @@
   }
 
   .name {
+    flex: 1;
     font-weight: 600;
     font-size: 1rem;
   }
 
-  .meta {
-    display: flex;
-    justify-content: flex-end;
-  }
-
   .effort {
+    flex-shrink: 0;
     font-size: 0.72rem;
     font-weight: 600;
     padding: 0.05rem 0.4rem;
@@ -114,9 +109,16 @@
   .effort-hard { background: #fee2e2; color: #991b1b; }
 
   .ingredient-list {
-    margin-top: 0.2rem;
+    margin: 0.2rem 0 0;
+    padding-left: 1.1rem;
     font-size: 0.82rem;
     color: #555;
     line-height: 1.4;
+    columns: 2;
+    column-gap: 1rem;
+  }
+
+  .ingredient-list li {
+    break-inside: avoid;
   }
 </style>

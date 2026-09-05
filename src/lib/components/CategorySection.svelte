@@ -6,7 +6,7 @@
   export let selectedIds; // Set
   export let onToggle;
 
-  let open = true;
+  let open = false;
 </script>
 
 <section class="category">
