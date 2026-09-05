@@ -1,10 +1,18 @@
 <script>
   import { copyToClipboard } from '../utils/clipboard.js';
+  import { mealCustomizations } from '../stores/selection.js';
 
   export let meals = []; // list of {id, name}
 
   let copied = false;
-  $: text = meals.map((m) => m.name).join('\n');
+
+  $: text = meals
+    .map((m) => {
+      const custom = $mealCustomizations.get(m.id);
+      const extras = (custom?.extra ?? []).filter((e) => e.checked).map((e) => e.name);
+      return extras.length ? `${m.name} (+${extras.join(', +')})` : m.name;
+    })
+    .join('\n');
 
   async function handleExport() {
     const ok = await copyToClipboard(text);

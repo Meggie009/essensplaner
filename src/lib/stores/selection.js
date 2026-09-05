@@ -4,6 +4,22 @@ import { meals } from '../data/meals.js';
 // Set of selected meal ids. No persistence (resets on reload) by design.
 export const selectedIds = writable(new Set());
 
+// Per-meal customization of the ingredient checklist:
+//   unchecked: Set<normalizedName> - base ingredients (from the meal file)
+//              that are excluded from the shopping list for this instance
+//   extra:     { name, qty, checked }[] - ingredients added on top of the
+//              meal's own list, just for this planning session
+// Not persisted across reloads, same as selectedIds.
+// Map<mealId, { unchecked: Set<string>, extra: Array }>
+export const mealCustomizations = writable(new Map());
+
+function withEntry(map, mealId, updater) {
+  const next = new Map(map);
+  const current = next.get(mealId) ?? { unchecked: new Set(), extra: [] };
+  next.set(mealId, updater(current));
+  return next;
+}
+
 export function toggleMeal(id) {
   selectedIds.update((set) => {
     const next = new Set(set);
@@ -18,27 +34,80 @@ export function toggleMeal(id) {
 
 export function clearSelection() {
   selectedIds.set(new Set());
+  mealCustomizations.set(new Map());
+}
+
+export function toggleIngredient(mealId, name) {
+  const key = name.trim().toLowerCase();
+  mealCustomizations.update((map) =>
+    withEntry(map, mealId, (entry) => {
+      const unchecked = new Set(entry.unchecked);
+      if (unchecked.has(key)) {
+        unchecked.delete(key);
+      } else {
+        unchecked.add(key);
+      }
+      return { ...entry, unchecked };
+    })
+  );
+}
+
+export function addExtraIngredient(mealId, name) {
+  const trimmed = name.trim();
+  if (!trimmed) return;
+  mealCustomizations.update((map) =>
+    withEntry(map, mealId, (entry) => ({
+      ...entry,
+      extra: [...entry.extra, { name: trimmed, qty: 1, checked: true }]
+    }))
+  );
+}
+
+export function toggleExtraIngredient(mealId, index) {
+  mealCustomizations.update((map) =>
+    withEntry(map, mealId, (entry) => ({
+      ...entry,
+      extra: entry.extra.map((ing, i) => (i === index ? { ...ing, checked: !ing.checked } : ing))
+    }))
+  );
+}
+
+export function removeExtraIngredient(mealId, index) {
+  mealCustomizations.update((map) =>
+    withEntry(map, mealId, (entry) => ({
+      ...entry,
+      extra: entry.extra.filter((_, i) => i !== index)
+    }))
+  );
 }
 
 export const selectedMeals = derived(selectedIds, ($ids) =>
   meals.filter((m) => $ids.has(m.id))
 );
 
-export const aggregatedIngredients = derived(selectedMeals, ($meals) => {
-  // Group by normalized (trimmed, lowercased) name, since ingredients are now
-  // just plain text per meal file rather than references into a shared
-  // catalog. The first-seen casing is kept for display.
-  const counts = new Map();
-  for (const meal of $meals) {
-    for (const ing of meal.ingredients) {
-      const key = ing.name.trim().toLowerCase();
-      const existing = counts.get(key);
-      if (existing) {
-        existing.qty += ing.qty ?? 1;
-      } else {
-        counts.set(key, { name: ing.name.trim(), qty: ing.qty ?? 1 });
+export const aggregatedIngredients = derived(
+  [selectedMeals, mealCustomizations],
+  ([$meals, $customizations]) => {
+    // Group by normalized (trimmed, lowercased) name, since ingredients are
+    // plain text per meal file rather than references into a shared catalog.
+    // The first-seen casing is kept for display.
+    const counts = new Map();
+    for (const meal of $meals) {
+      const custom = $customizations.get(meal.id) ?? { unchecked: new Set(), extra: [] };
+      const active = [
+        ...meal.ingredients.filter((ing) => !custom.unchecked.has(ing.name.trim().toLowerCase())),
+        ...custom.extra.filter((ing) => ing.checked)
+      ];
+      for (const ing of active) {
+        const key = ing.name.trim().toLowerCase();
+        const existing = counts.get(key);
+        if (existing) {
+          existing.qty += ing.qty ?? 1;
+        } else {
+          counts.set(key, { name: ing.name.trim(), qty: ing.qty ?? 1 });
+        }
       }
     }
+    return [...counts.values()].sort((a, b) => a.name.localeCompare(b.name, 'de'));
   }
-  return [...counts.values()].sort((a, b) => a.name.localeCompare(b.name, 'de'));
-});
+);
