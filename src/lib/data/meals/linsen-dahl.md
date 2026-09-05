@@ -1,5 +1,5 @@
 ---
-category: hülsenfrüchte
+category: hülsenfrüchte, reis
 effort: medium
 ---
 # Linsen Dahl
