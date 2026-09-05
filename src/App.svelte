@@ -1,5 +1,6 @@
 <script>
   import { meals } from './lib/data/meals.js';
+  import { categories } from './lib/data/categories.js';
   import CategorySection from './lib/components/CategorySection.svelte';
   import SelectedMealsPanel from './lib/components/SelectedMealsPanel.svelte';
   import IngredientsPanel from './lib/components/IngredientsPanel.svelte';
@@ -11,21 +12,11 @@
     footerEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  const categoryLabels = {
-    nudeln: 'Nudeln',
-    kartoffeln: 'Kartoffeln',
-    linsen: 'Linsen',
-    reis: 'Reis',
-    couscous: 'Couscous',
-    teig: 'Teig / Gebäck',
-    sonstige: 'Sonstiges'
-  };
-
-  // group meals by their (first) category, preserving a fixed display order
-  $: groups = Object.keys(categoryLabels)
-    .map((key) => ({
+  // group meals by category, preserving the display order from categories.js
+  $: groups = categories
+    .map(({ key, label }) => ({
       key,
-      label: categoryLabels[key],
+      label,
       meals: meals.filter((m) => m.categories.includes(key))
     }))
     .filter((g) => g.meals.length > 0);

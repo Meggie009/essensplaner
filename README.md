@@ -5,50 +5,6 @@ the selected meals plus their combined shopping list to the clipboard.
 
 ---
 
-## Local development
-
-```bash
-npm install
-npm run dev
-```
-
-## Adding a new meal
-
-Edit `src/lib/data/meals.json`. Each entry looks like:
-
-```json
-{
-  "id": "unique-slug",
-  "name": "Display Name",
-  "categories": ["nudeln"],
-  "effort": "easy",
-  "ingredients": [
-    { "id": "zwiebel", "qty": 1 }
-  ]
-}
-```
-
-- `categories`: one or more of `nudeln`, `kartoffeln`, `linsen`, `reis`,
-  `couscous`, `teig`, `sonstige` (see `categoryLabels` in `src/App.svelte` to
-  add a new category).
-- `effort`: `"easy" | "medium" | "hard"`.
-- `ingredients[].id` must exist in `src/lib/data/ingredients.json` — add new
-  ingredients there first if needed.
-
-## Deploying to GitHub Pages
-
-1. Push this repo to GitHub.
-2. In the repo settings, under **Pages**, set the source to **GitHub Actions**.
-3. Update `base` in `vite.config.js` to match your repo name
-   (`/your-repo-name/`).
-4. Push to `main` — the included workflow
-   (`.github/workflows/deploy.yml`) builds the app and publishes it
-   automatically.
-
-Your site will be live at `https://<username>.github.io/<repo-name>/`.
-
-----
-
 ## 1. Project structure
 
 ```
@@ -58,15 +14,17 @@ meal-planner/
 │   ├── main.js                        # Vite/Svelte entry point
 │   └── lib/
 │       ├── data/
-│       │   ├── meals.json             # the meal database
-│       │   └── ingredients.json       # ingredient id -> display name
+│       │   ├── meals/                 # one markdown file per meal — see section 3
+│       │   ├── meals.js               # parses meals/*.md at build time
+│       │   └── categories.js          # the list of valid categories — see section 2
 │       ├── stores/
 │       │   └── selection.js           # selection state + derived stores
 │       ├── utils/
 │       │   └── clipboard.js           # copy-to-clipboard helper
 │       └── components/
-│           ├── MealCard.svelte        # one clickable/highlightable meal
-│           ├── CategorySection.svelte # a category's grid of MealCards
+│           ├── MealCard.svelte        # one meal: checkbox to select, click to expand ingredients
+│           ├── CategorySection.svelte # a category's foldable, sticky-header grid of MealCards
+│           ├── SelectionBadge.svelte  # floating selected-count badge + jump-to-export button
 │           ├── SelectedMealsPanel.svelte
 │           └── IngredientsPanel.svelte
 ├── index.html
@@ -78,165 +36,102 @@ meal-planner/
 
 ---
 
-## 2. Data structure
+## 2. Categories
 
-Meals and ingredients are kept in **two separate JSON files** rather than one,
-so that an ingredient's display name only has to be edited in one place, and
-so a meal can reference an ingredient multiple times with a quantity instead
-of needing a separately-named entry per quantity (the original data had
-`Karotte`, `Karotte(2)`, `Karotte(3)` etc. as distinct strings — that's gone
-now).
+All valid categories live in **`src/lib/data/categories.js`** — this is the
+single source of truth both for what shows up as a section on the page and
+for which `category:` values a meal file can use. Current list:
 
-### `ingredients.json`
+| key          | label          |
+|--------------|----------------|
+| `nudeln`     | Nudeln         |
+| `kartoffeln` | Kartoffeln     |
+| `linsen`     | Linsen         |
+| `reis`       | Reis           |
+| `couscous`   | Couscous       |
+| `teig`       | Teig / Gebäck  |
+| `sonstige`   | Sonstiges      |
 
-A flat dictionary: ingredient id → display name.
+The order of this list is also the display order of the sections on the
+page.
 
-```json
-{
-  "zwiebel": "Zwiebel",
-  "karotte": "Karotte",
-  "kartoffeln": "Kartoffeln"
-}
+**To add a new category:** add a `{ key: '...', label: '...' }` entry to
+`categories.js`. That's the only code change needed — meal files can then use
+the new `key` right away.
+
+---
+
+## 3. Meal data structure
+
+Each meal is its own file in **`src/lib/data/meals/`**, parsed automatically
+at build time (`src/lib/data/meals.js`) — there's no central list to edit or
+break, no ids to invent, and no separate ingredient catalog to keep in sync.
+
+### File format
+
+```markdown
+---
+category: kartoffeln
+effort: easy
+---
+# Kartoffelsalat
+
+- Kartoffeln
+- Zwiebel
+- Senf
+- Apfelessig
 ```
 
-### `meals.json`
+- **`category`** — one key from the table above. For more than one, separate
+  with commas: `category: nudeln, linsen`.
+- **`effort`** — one of `easy`, `medium`, `hard`.
+- **`# Heading`** — becomes the meal's display name.
+- **Ingredient list** — one ingredient per bullet, plain text, no ids to
+  look up. Add a quantity in parentheses if you need more than one of
+  something, e.g. `- Zwiebel (2)`. Ingredient names are matched across meals
+  by trimmed/lowercased text for the shopping-list count, so keep spelling
+  consistent (`Zwiebel` and `zwiebel` count as the same ingredient;
+  `Zwiebel` and `Zwiebeln` do not).
+- The meal's internal id is taken from the **filename** (without `.md`), so
+  it must be unique — e.g. `kartoffelsalat.md`.
 
-An array of meal objects:
+### Template — copy this to create a new meal
 
-```json
-{
-  "id": "nudeln-sojagranulat",
-  "name": "Nudeln mit Sojagranulat",
-  "categories": ["nudeln"],
-  "effort": "medium",
-  "ingredients": [
-    { "id": "zwiebel", "qty": 1 },
-    { "id": "nudeln", "qty": 1 },
-    { "id": "karotte", "qty": 1 }
-  ]
-}
+Save as `src/lib/data/meals/<a-unique-filename>.md`:
+
+```markdown
+---
+category: sonstige
+effort: medium
+---
+# Meal Name
+
+- Ingredient
+- Ingredient
+- Ingredient (2)
 ```
 
-| Field         | Type       | Notes |
-|---------------|------------|-------|
-| `id`          | string     | Unique, URL/JS-safe slug. Used as the selection key — never reused across meals. |
-| `name`        | string     | What's actually shown on the card. |
-| `categories`  | string[]   | One or more tags. Currently used for grouping the page into sections (see below). An array (not a single string) so a meal can belong to more than one group later, e.g. a lentil-pasta bake tagged `["nudeln", "linsen"]`. |
-| `effort`      | string     | One of `"easy" \| "medium" \| "hard"`. |
-| `ingredients` | `{id, qty}[]` | `id` must exist in `ingredients.json`. `qty` defaults to `1` if omitted — only set it when the recipe needs more than one of something. |
+Then:
+1. Set `category` to one (or more, comma-separated) key from the table in
+   section 2.
+2. Set `effort` to `easy`, `medium`, or `hard`.
+3. Replace `# Meal Name` with the actual dish name.
+4. List the ingredients as plain bullets, adding `(n)` after any that need
+   more than one.
 
-### Current categories
-
-`nudeln`, `kartoffeln`, `linsen`, `reis`, `couscous`, `teig` (dough-based:
-quiche, pizza, pancakes, dumplings), `sonstige` (everything else: soups,
-salads, egg dishes...). These are just the current section headers — see
-["Adding a new category"](#adding-a-new-category) below to change them.
+No other files need to change — the meal shows up automatically the next
+time the app builds.
 
 ---
 
-## 3. Decisions made (and why)
-
-These came out of planning this together, recorded here so future-you (or
-anyone else touching this repo) knows the reasoning:
-
-- **Category meaning changed from weekday → main ingredient type.**
-  The original Android app grouped meals by the weekday they were planned
-  for. That's gone; `categories` now describes *what kind of dish* it is
-  (pasta, potato, rice, ...), which is more useful for browsing and doesn't
-  force a meal into a fixed day.
-- **No persistence of selection across reloads.** Selection lives in a plain
-  in-memory Svelte store (`Set` of meal ids). Refreshing the page clears it.
-  This was a deliberate simplicity trade-off — no localStorage sync logic,
-  no stale-selection edge cases to think about.
-- **Free selection, no per-day/category limit.** You can select any number of
-  meals from any categories at once; there's no "one meal per day" rule
-  enforced anywhere.
-- **Effort is a simple 3-level enum** (`easy`/`medium`/`hard`), not minutes or
-  a star rating — easiest to assign consistently by hand when adding a new
-  meal, and enough resolution to be useful when glancing at the grid.
-- **Ingredients and meals are separate JSON files.** This keeps ingredient
-  names centralized (rename an ingredient once, it updates everywhere) and
-  lets ingredient aggregation work by id + summed quantity instead of fuzzy
-  string matching.
-- **Plain Vite + Svelte, not SvelteKit.** The app is a single page with no
-  routing needs, so SvelteKit's adapter/prerendering setup would be pure
-  overhead. Plain Vite builds a static `dist/` folder that GitHub Pages can
-  serve directly.
-- **GitHub Actions handles the GitHub Pages deploy**, rather than a manual
-  `gh-pages` branch push — the workflow in `.github/workflows/deploy.yml`
-  builds and publishes automatically on every push to `main`.
-
----
-
-## 4. How to add a new meal
-
-1. Check whether every ingredient the meal needs already exists in
-   `src/lib/data/ingredients.json`. If not, add it:
-
-   ```json
-   "senf": "Senf"
-   ```
-
-2. Add an entry to the `meals.json` array:
-
-   ```json
-   {
-     "id": "kartoffelsalat",
-     "name": "Kartoffelsalat",
-     "categories": ["kartoffeln"],
-     "effort": "easy",
-     "ingredients": [
-       { "id": "kartoffeln", "qty": 1 },
-       { "id": "zwiebel", "qty": 1 },
-       { "id": "senf", "qty": 1 },
-       { "id": "apfelessig", "qty": 1 }
-     ]
-   }
-   ```
-
-   - `id`: lowercase, hyphen-separated, must be unique in the file.
-   - `categories`: pick from the existing list above, or add a new one (see
-     next section). You can list more than one if it genuinely fits several.
-   - `effort`: `"easy"`, `"medium"`, or `"hard"` — there's no formula, just
-     judge it by how fiddly the recipe actually is.
-   - `ingredients`: only set `qty` above `1` when you actually need more than
-     one of that ingredient (e.g. two onions → `{ "id": "zwiebel", "qty": 2 }`).
-
-3. Save, run `npm run dev` to check it shows up correctly in its category
-   section and toggles/highlights on click.
-
-No code changes needed for a normal new meal — this is the entire workflow.
-
-### Adding a new category
-
-If a meal doesn't fit any existing category:
-
-1. Use the new category key in that meal's `categories` array, e.g.
-   `"categories": ["suppe"]`.
-2. Add a label for it in `src/App.svelte`, in the `categoryLabels` object:
-
-   ```js
-   const categoryLabels = {
-     nudeln: 'Nudeln',
-     kartoffeln: 'Kartoffeln',
-     // ...
-     suppe: 'Suppen'
-   };
-   ```
-
-   The order of keys in this object is also the display order of the
-   sections on the page.
-
----
-
-## 5. Local development
+## 4. Local development
 
 ```bash
 npm install
 npm run dev
 ```
 
-## 6. Building & deploying to GitHub Pages
+## 5. Building & deploying to GitHub Pages
 
 1. Push this repo to GitHub.
 2. In the repo's **Settings → Pages**, set the source to **GitHub Actions**.
@@ -247,3 +142,38 @@ npm run dev
    `npm run build` and publishes the `dist/` folder automatically.
 
 Your site will be live at `https://<username>.github.io/<repo-name>/`.
+
+---
+
+## 6. Decisions made (and why)
+
+Kept here so future changes stay consistent with the reasoning:
+
+- **Category meaning is "main ingredient type", not weekday.** The original
+  data source grouped meals by the day they were planned for; that's gone.
+  `category` now describes what kind of dish it is, which is more useful for
+  browsing and doesn't tie a meal to a fixed day.
+- **No persistence of selection across reloads.** Selection lives in an
+  in-memory Svelte store; refreshing clears it. Deliberate simplicity
+  trade-off — no localStorage sync logic to maintain.
+- **Free selection, no per-day/category limit.** Any number of meals from
+  any categories can be selected at once.
+- **Effort is a simple 3-level enum**, not minutes or stars — easiest to
+  assign consistently by hand, and enough resolution to be useful at a
+  glance.
+- **One markdown file per meal, plain-text ingredients, no ingredient
+  catalog.** Originally meals lived in one big JSON file referencing
+  ingredient ids from a separate catalog. That made adding a meal
+  error-prone (JSON punctuation, needing to check/add catalog entries).
+  Markdown files with plain ingredient names removed both problems, at the
+  cost of needing consistent spelling for ingredients to aggregate
+  correctly across meals.
+- **Categories centralized in one file (`categories.js`).** Keeps the
+  section list, its display order, and the valid `category` values for meal
+  files all defined in exactly one place instead of being implicit in
+  `App.svelte`.
+- **Plain Vite + Svelte, not SvelteKit.** Single page, no routing needs, so
+  SvelteKit's adapter/prerendering setup would be pure overhead.
+- **GitHub Actions handles the GitHub Pages deploy**, rather than a manual
+  `gh-pages` branch push — builds and publishes automatically on every push
+  to `main`.
