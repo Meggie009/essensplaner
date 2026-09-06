@@ -18,6 +18,10 @@
     footerEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  function clearSearch() {
+    searchQuery = '';
+  }
+
   $: searchTerms = searchQuery.trim().toLocaleLowerCase('de').split(/\s+/).filter(Boolean);
 
   function matchesSearch(meal, terms) {
@@ -51,13 +55,18 @@
 <main>
   <h1>Menu</h1>
 
-  <input
-    class="search-input"
-    type="search"
-    placeholder="Gerichte oder Zutaten suchen"
-    aria-label="Gerichte oder Zutaten suchen"
-    bind:value={searchQuery}
-  />
+  <div class="search-wrap">
+    <input
+      class="search-input"
+      type="search"
+      placeholder="Gerichte oder Zutaten suchen"
+      aria-label="Gerichte oder Zutaten suchen"
+      bind:value={searchQuery}
+    />
+    {#if searchQuery}
+      <button class="search-clear" type="button" aria-label="Suche leeren" on:click={clearSearch}></button>
+    {/if}
+  </div>
 
   {#each groups as group (group.key)}
     <CategorySection
@@ -115,12 +124,17 @@
     color: var(--color-text);
   }
 
+  .search-wrap {
+    position: relative;
+    margin-bottom: 1.2rem;
+  }
+
   .search-input {
     display: block;
     box-sizing: border-box;
     width: 100%;
-    margin-bottom: 1.2rem;
     padding: 0.65rem 0.8rem;
+    padding-right: 2.4rem;
     border: 2px solid transparent;
     border-radius: var(--radius);
     background: var(--color-surface);
@@ -131,6 +145,44 @@
 
   .search-input::placeholder {
     color: var(--color-text-muted);
+  }
+
+  .search-input::-webkit-search-cancel-button {
+    appearance: none;
+  }
+
+  .search-clear {
+    all: unset;
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    cursor: pointer;
+    transform: translateY(-50%);
+  }
+
+  .search-clear::before,
+  .search-clear::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1px;
+    height: 0.9rem;
+    background: var(--color-text-muted);
+  }
+
+  .search-clear::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .search-clear::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  .search-clear:focus-visible {
+    outline: 1px solid var(--color-accent);
   }
 
   .search-input:focus {
