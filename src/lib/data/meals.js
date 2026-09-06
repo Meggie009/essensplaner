@@ -92,6 +92,7 @@ const weeklyShopping = {
   categories: [],
   effort: null,
   ingredientsUncheckedByDefault: true,
+  excludeFromMealExport: true,
   ingredients: parseIngredients(weeklyShoppingRaw)
 };
 

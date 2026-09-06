@@ -6,7 +6,9 @@
 
   let copied = false;
 
-  $: text = meals
+  $: exportMeals = meals.filter((meal) => !meal.excludeFromMealExport);
+
+  $: text = exportMeals
     .map((m) => {
       const custom = $mealCustomizations.get(m.id);
       const extras = (custom?.extra ?? []).filter((e) => e.checked).map((e) => e.name);
@@ -25,8 +27,8 @@
 
 <div class="panel">
   <div class="header">
-    <h3>Ausgewählte Gerichte ({meals.length})</h3>
-    <button class="export" on:click={handleExport} disabled={meals.length === 0}>
+    <h3>Ausgewählte Gerichte ({exportMeals.length})</h3>
+    <button class="export" on:click={handleExport} disabled={exportMeals.length === 0}>
       {copied ? 'Kopiert ✓' : 'Kopieren'}
     </button>
   </div>
