@@ -5,18 +5,20 @@
   export let meals = [];
   export let selectedIds; // Set
   export let onToggle;
+  export let forceOpen = false;
 
   let open = false;
+  $: expanded = open || forceOpen;
 </script>
 
 <section class="category">
-  <button class="header" on:click={() => (open = !open)} aria-expanded={open}>
-    <span class="chevron" class:open>▶</span>
+  <button class="header" on:click={() => (open = !open)} aria-expanded={expanded}>
+    <span class="chevron" class:open={expanded}>▶</span>
     <h2>{title}</h2>
     <span class="count">{meals.length}</span>
   </button>
 
-  {#if open}
+  {#if expanded}
     <div class="grid">
       {#each meals as meal (meal.id)}
         <MealCard {meal} selected={selectedIds.has(meal.id)} {onToggle} />

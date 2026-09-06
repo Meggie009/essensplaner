@@ -10,10 +10,22 @@
   import { selectedIds, toggleMeal, clearSelection, selectedMeals, aggregatedIngredients } from './lib/stores/selection.js';
 
   let footerEl;
+  let searchQuery = '';
+  let searchTerms = [];
   const effortOrder = { easy: 1, medium: 2, hard: 3 };
 
   function jumpToExport() {
     footerEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  $: searchTerms = searchQuery.trim().toLocaleLowerCase('de').split(/\s+/).filter(Boolean);
+
+  function matchesSearch(meal, terms) {
+    if (terms.length === 0) return true;
+    const searchableText = [meal.name, ...meal.ingredients.map((ingredient) => ingredient.name)]
+      .join(' ')
+      .toLocaleLowerCase('de');
+    return terms.every((term) => searchableText.includes(term));
   }
 
   // group meals by category, preserving the display order from categories.js
@@ -23,6 +35,7 @@
       label,
       meals: meals
         .filter((m) => m.categories.includes(key))
+        .filter((meal) => matchesSearch(meal, searchTerms))
         .sort(
           (a, b) =>
             (effortOrder[a.effort] ?? Number.MAX_SAFE_INTEGER) -
@@ -38,12 +51,21 @@
 <main>
   <h1>Menu</h1>
 
+  <input
+    class="search-input"
+    type="search"
+    placeholder="Gerichte oder Zutaten suchen"
+    aria-label="Gerichte oder Zutaten suchen"
+    bind:value={searchQuery}
+  />
+
   {#each groups as group (group.key)}
     <CategorySection
       title={group.label}
       meals={group.meals}
       selectedIds={$selectedIds}
       onToggle={toggleMeal}
+      forceOpen={searchTerms.length > 0}
     />
   {/each}
 
@@ -91,6 +113,29 @@
     line-height: 0.9;
     letter-spacing: -0.01em;
     color: var(--color-text);
+  }
+
+  .search-input {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 1.2rem;
+    padding: 0.65rem 0.8rem;
+    border: 2px solid transparent;
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+  }
+
+  .search-input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: color-mix(in srgb, var(--color-accent) 65%, white);
   }
 
   footer {
