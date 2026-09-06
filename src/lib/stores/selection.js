@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store';
+import { writable, derived, get } from 'svelte/store';
 import { meals } from '../data/meals.js';
 import { categories } from '../data/categories.js';
 
@@ -46,6 +46,38 @@ function withEntry(map, mealId, updater) {
   return next;
 }
 
+function selectMealWhenIngredientIsChecked(mealId) {
+  const meal = meals.find((item) => item.id === mealId);
+  if (!meal?.ingredientsUncheckedByDefault) return;
+
+  selectedIds.update((set) => {
+    if (set.has(mealId)) return set;
+    const next = new Set(set);
+    next.add(mealId);
+    return next;
+  });
+}
+
+function syncWeeklyMealSelection(mealId) {
+  const meal = meals.find((item) => item.id === mealId);
+  if (!meal?.ingredientsUncheckedByDefault) return;
+
+  const customization = get(mealCustomizations).get(mealId);
+  const hasCheckedIngredient =
+    meal.ingredients.some(
+      (ingredient) => !customization?.unchecked.has(ingredient.name.trim().toLowerCase())
+    ) || customization?.extra.some((ingredient) => ingredient.checked);
+
+  selectedIds.update((set) => {
+    const shouldBeSelected = Boolean(hasCheckedIngredient);
+    if (set.has(mealId) === shouldBeSelected) return set;
+    const next = new Set(set);
+    if (shouldBeSelected) next.add(mealId);
+    else next.delete(mealId);
+    return next;
+  });
+}
+
 export function toggleMeal(id) {
   selectedIds.update((set) => {
     const next = new Set(set);
@@ -65,6 +97,10 @@ export function clearSelection() {
 
 export function toggleIngredient(mealId, name) {
   const key = name.trim().toLowerCase();
+  const current = get(mealCustomizations).get(mealId);
+  if (current?.unchecked.has(key)) {
+    selectMealWhenIngredientIsChecked(mealId);
+  }
   mealCustomizations.update((map) =>
     withEntry(map, mealId, (entry) => {
       const unchecked = new Set(entry.unchecked);
@@ -76,26 +112,34 @@ export function toggleIngredient(mealId, name) {
       return { ...entry, unchecked };
     })
   );
+  syncWeeklyMealSelection(mealId);
 }
 
 export function addExtraIngredient(mealId, name) {
   const trimmed = name.trim();
   if (!trimmed) return;
+  selectMealWhenIngredientIsChecked(mealId);
   mealCustomizations.update((map) =>
     withEntry(map, mealId, (entry) => ({
       ...entry,
       extra: [...entry.extra, { name: trimmed, qty: 1, checked: true }]
     }))
   );
+  syncWeeklyMealSelection(mealId);
 }
 
 export function toggleExtraIngredient(mealId, index) {
+  const current = get(mealCustomizations).get(mealId);
+  if (current?.extra[index] && !current.extra[index].checked) {
+    selectMealWhenIngredientIsChecked(mealId);
+  }
   mealCustomizations.update((map) =>
     withEntry(map, mealId, (entry) => ({
       ...entry,
       extra: entry.extra.map((ing, i) => (i === index ? { ...ing, checked: !ing.checked } : ing))
     }))
   );
+  syncWeeklyMealSelection(mealId);
 }
 
 export function removeExtraIngredient(mealId, index) {
