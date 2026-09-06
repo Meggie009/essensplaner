@@ -23,6 +23,9 @@
   }
 
   $: searchTerms = searchQuery.trim().toLocaleLowerCase('de').split(/\s+/).filter(Boolean);
+  $: selectionCount = $selectedMeals.filter(
+    (meal) => meal.id !== weeklyShopping.id && !meal.categories.includes('backen')
+  ).length;
 
   function matchesSearch(meal, terms) {
     if (terms.length === 0) return true;
@@ -50,7 +53,7 @@
     .filter((g) => g.meals.length > 0);
 </script>
 
-<SelectionBadge count={$selectedMeals.length} onJump={jumpToExport} />
+<SelectionBadge count={selectionCount} onJump={jumpToExport} />
 
 <main>
   <h1>Menu</h1>
