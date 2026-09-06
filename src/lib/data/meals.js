@@ -91,6 +91,7 @@ const weeklyShopping = {
   name: 'Jede Woche',
   categories: [],
   effort: null,
+  ingredientsUncheckedByDefault: true,
   ingredients: parseIngredients(weeklyShoppingRaw)
 };
 

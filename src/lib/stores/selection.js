@@ -13,6 +13,20 @@ function compareSelectedMeals(a, b) {
   return categoryDifference || a.name.localeCompare(b.name, 'de');
 }
 
+function createInitialMealCustomizations() {
+  return new Map(
+    meals
+      .filter((meal) => meal.ingredientsUncheckedByDefault)
+      .map((meal) => [
+        meal.id,
+        {
+          unchecked: new Set(meal.ingredients.map((ingredient) => ingredient.name.trim().toLowerCase())),
+          extra: []
+        }
+      ])
+  );
+}
+
 // Set of selected meal ids. No persistence (resets on reload) by design.
 export const selectedIds = writable(new Set());
 
@@ -23,7 +37,7 @@ export const selectedIds = writable(new Set());
 //              meal's own list, just for this planning session
 // Not persisted across reloads, same as selectedIds.
 // Map<mealId, { unchecked: Set<string>, extra: Array }>
-export const mealCustomizations = writable(new Map());
+export const mealCustomizations = writable(createInitialMealCustomizations());
 
 function withEntry(map, mealId, updater) {
   const next = new Map(map);
@@ -46,7 +60,7 @@ export function toggleMeal(id) {
 
 export function clearSelection() {
   selectedIds.set(new Set());
-  mealCustomizations.set(new Map());
+  mealCustomizations.set(createInitialMealCustomizations());
 }
 
 export function toggleIngredient(mealId, name) {
