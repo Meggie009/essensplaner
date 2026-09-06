@@ -27,7 +27,7 @@
   <div class="header">
     <h3>Ausgewählte Gerichte ({meals.length})</h3>
     <button class="export" on:click={handleExport} disabled={meals.length === 0}>
-      {copied ? 'Kopiert ✓' : 'In Zwischenablage kopieren'}
+      {copied ? 'Kopiert ✓' : 'Kopieren'}
     </button>
   </div>
   <textarea readonly rows="6" value={text} placeholder="Noch keine Gerichte ausgewählt"></textarea>
@@ -49,32 +49,39 @@
 
   h3 {
     margin: 0;
+    font-family: var(--font-body);
+    color: var(--color-text);
+    font-weight: 700;
   }
 
   textarea {
     width: 100%;
     box-sizing: border-box;
-    font-family: inherit;
+    font-family: var(--font-body);
     font-size: 0.9rem;
     padding: 0.6rem;
-    border-radius: 8px;
-    border: 1px solid #ddd;
+    border-radius: var(--radius);
+    border: none;
+    background: var(--color-surface);
+    color: var(--color-text);
     resize: vertical;
   }
 
   .export {
-    background: #d97706;
-    color: white;
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius);
     padding: 0.45rem 0.9rem;
+    font-family: var(--font-body);
     font-size: 0.85rem;
     cursor: pointer;
     white-space: nowrap;
   }
 
   .export:disabled {
-    background: #e5c9a3;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
     cursor: not-allowed;
   }
 </style>

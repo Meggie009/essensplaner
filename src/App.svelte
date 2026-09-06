@@ -25,7 +25,7 @@
 <SelectionBadge count={$selectedMeals.length} onJump={jumpToExport} />
 
 <main>
-  <h1>🍽️ Essensplan</h1>
+  <h1>Essensplan</h1>
 
   {#each groups as group (group.key)}
     <CategorySection
@@ -48,29 +48,35 @@
       <IngredientsPanel ingredients={$aggregatedIngredients} />
     </div>
   </footer>
-</main>
 
-<div class="impressum">
-  <p>Made by <a href="https://github.com/Meggie009/essensplaner" target="_blank" rel="noopener noreferrer">Magdalena</a></p>
-</div>
+  <p class="impressum">
+    made by Magdalena ·
+    <a href="https://github.com/Meggie009/essensplaner" target="_blank" rel="noopener noreferrer">
+      GitHub
+    </a>
+  </p>
+</main>
 
 <style>
   main {
     max-width: 900px;
     margin: 0 auto;
     padding: 1.5rem;
-    font-family: system-ui, sans-serif;
-    color: #222;
   }
 
   h1 {
     text-align: center;
-    margin-bottom: 2rem;
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: clamp(3rem, 11vw, 5.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    color: var(--color-text);
   }
 
   footer {
     margin-top: 2.5rem;
-    border-top: 1px solid #eee;
     padding-top: 1.5rem;
   }
 
@@ -83,16 +89,25 @@
 
   .footer-header h2 {
     margin: 0;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    color: var(--color-text);
   }
 
   .clear {
-    background: none;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 0.3rem 0.7rem;
-    font-size: 0.8rem;
+    all: unset;
     cursor: pointer;
-    color: #555;
+    background: var(--color-surface);
+    padding: 0.3rem 0.7rem;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+  }
+
+  .clear:hover {
+    color: var(--color-accent);
   }
 
   .panels {
@@ -101,25 +116,25 @@
     gap: 1.5rem;
   }
 
-    .impressum {
-    text-align: center;
-    padding: 2rem 1.5rem 1.5rem;
-    font-size: 0.75rem;
-    color: #999;
-  }
-  
-  .impressum a {
-    color: #999;
-    text-decoration: none;
-  }
-  
-  .impressum a:hover {
-    text-decoration: underline;
-  }
-
   @media (max-width: 640px) {
     .panels {
       grid-template-columns: 1fr;
     }
+  }
+
+  .impressum {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+  }
+
+  .impressum a {
+    color: var(--color-text-muted);
+    text-decoration: underline;
+  }
+
+  .impressum a:hover {
+    color: var(--color-accent);
   }
 </style>

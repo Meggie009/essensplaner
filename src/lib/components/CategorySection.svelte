@@ -41,14 +41,13 @@
     align-items: center;
     gap: 0.6rem;
     width: 100%;
-    background: #fff;
-    border-bottom: 2px solid #d97706;
+    background: var(--color-bg);
     padding: 0.6rem 0.2rem;
   }
 
   .chevron {
     display: inline-block;
-    color: #b45309;
+    color: var(--color-accent);
     transition: transform 0.15s ease;
     font-size: 0.8rem;
   }
@@ -59,15 +58,18 @@
 
   h2 {
     margin: 0;
-    color: #b45309;
-    text-transform: capitalize;
-    font-size: 1.15rem;
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1.25rem;
   }
 
   .count {
     margin-left: auto;
+    font-family: var(--font-body);
     font-size: 0.78rem;
-    color: #aaa;
+    color: var(--color-text-muted);
   }
 
   .grid {

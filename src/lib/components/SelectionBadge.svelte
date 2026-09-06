@@ -19,11 +19,11 @@
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    background: #d97706;
-    color: white;
-    border-radius: 999px;
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+    border-radius: var(--radius);
     padding: 0.35rem 0.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    font-family: var(--font-body);
     font-size: 0.85rem;
     font-weight: 600;
   }
@@ -42,7 +42,6 @@
     justify-content: center;
     width: 1.6rem;
     height: 1.6rem;
-    border-radius: 50%;
     background: rgba(255, 255, 255, 0.2);
     line-height: 1;
   }

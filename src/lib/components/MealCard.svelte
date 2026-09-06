@@ -14,7 +14,8 @@
   let expanded = false;
   let newIngredientText = '';
 
-  const effortLabel = { easy: 'schnell', medium: 'mittel', hard: 'aufwändig' };
+  const effortLabel = { easy: 'einfach', medium: 'mittel', hard: 'aufwändig' };
+  const effortLevel = { easy: 1, medium: 2, hard: 3 };
 
   $: customization = $mealCustomizations.get(meal.id) ?? { unchecked: new Set(), extra: [] };
   $: baseIngredients = meal.ingredients.map((ing) => ({
@@ -49,7 +50,15 @@
 >
   <div class="top-row">
     <div class="name">{meal.name}</div>
-    <span class="effort effort-{meal.effort}">{effortLabel[meal.effort] ?? meal.effort}</span>
+    <span
+      class="effort effort-{meal.effort}"
+      aria-label={effortLabel[meal.effort] ?? meal.effort}
+      title={effortLabel[meal.effort] ?? meal.effort}
+    >
+      {#each Array(effortLevel[meal.effort] ?? 0) as dot}
+        <span class="effort-dot"></span>
+      {/each}
+    </span>
     <!-- svelte-ignore a11y-label-has-associated-control -->
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
@@ -114,20 +123,14 @@
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
-    background: #fafafa;
-    border: 2px solid #eee;
-    border-radius: 8px;
+    background: var(--color-surface);
+    border-radius: var(--radius);
     padding: 0.6rem 0.9rem;
-    transition: border-color 0.15s, background 0.15s;
-  }
-
-  .card:hover {
-    border-color: #d97706;
+    transition: background 0.15s;
   }
 
   .card.selected {
-    background: #fff7ed;
-    border-color: #d97706;
+    background: var(--color-surface-selected);
   }
 
   .top-row {
@@ -142,30 +145,28 @@
     cursor: pointer;
   }
 
-  .checkbox-wrap input {
-    width: 1.05rem;
-    height: 1.05rem;
-    cursor: pointer;
-  }
-
   .name {
     flex: 1;
-    font-weight: 600;
-    font-size: 1rem;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 0.92rem;
+    color: var(--color-text);
   }
 
   .effort {
     flex-shrink: 0;
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 0.05rem 0.4rem;
-    border-radius: 999px;
     white-space: nowrap;
+    display: flex;
+    gap: 0.15rem;
+    color: color-mix(in srgb, var(--color-accent) 65%, white);
   }
 
-  .effort-easy { background: #dcfce7; color: #166534; }
-  .effort-medium { background: #fef3c7; color: #92400e; }
-  .effort-hard { background: #fee2e2; color: #991b1b; }
+  .effort-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: currentColor;
+  }
 
   .expanded-content {
     cursor: default;
@@ -175,8 +176,9 @@
     list-style: none;
     margin: 0.3rem 0 0;
     padding: 0;
+    font-family: var(--font-body);
     font-size: 0.82rem;
-    color: #444;
+    color: var(--color-text);
     line-height: 1.5;
     columns: 2;
     column-gap: 1rem;
@@ -199,8 +201,23 @@
   }
 
   .ingredient-list input[type='checkbox'] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 0.85rem;
+    height: 0.85rem;
+    border: 2px solid var(--color-accent);
+    border-radius: 50%;
+    background: transparent;
     flex-shrink: 0;
-    cursor: pointer;
+  }
+
+  .ingredient-list input[type='checkbox']:checked {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .ingredient-list input[type='checkbox']:checked::after {
+    display: none;
   }
 
   .ingredient-list .remove {
@@ -220,20 +237,23 @@
 
   .add-ingredient input {
     flex: 1;
+    font-family: var(--font-body);
     font-size: 0.82rem;
     padding: 0.25rem 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--color-bg);
+    color: var(--color-text);
   }
 
   .add-ingredient button {
     all: unset;
     cursor: pointer;
-    background: #d97706;
-    color: white;
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
     width: 1.6rem;
     height: 1.6rem;
-    border-radius: 5px;
+    border-radius: var(--radius);
     display: flex;
     align-items: center;
     justify-content: center;

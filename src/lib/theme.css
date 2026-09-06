@@ -1,0 +1,59 @@
+/* Fixed style: warm gray background, deep blue text/accent, no borders,
+   no rounded corners. "Boxes" (cards, textareas) are distinguished purely by
+   a slightly darker fill than the page background - never by a border. */
+
+:root {
+  --font-display: 'Archivo Black', sans-serif;
+  --font-body: 'Archivo', sans-serif;
+  --color-bg: #ece9e2;
+  --color-surface: #e1ddd2;
+  --color-surface-selected: #d3dbef;
+  --color-border: transparent;
+  --color-accent: #1b3f91;
+  --color-text: #1b3f91;
+  --color-text-muted: #5c6c93;
+  --color-accent-contrast: #ffffff;
+  --radius: 0px;
+  --border-width: 0px;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+/* Checkbox styling shared everywhere in the app - square outline in the
+   text color when unchecked, filled accent blue with a white tick when
+   checked, no rounded corners. */
+input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0;
+  border: 2px solid var(--color-text);
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+
+input[type='checkbox']:checked {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+input[type='checkbox']:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--color-accent-contrast);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
