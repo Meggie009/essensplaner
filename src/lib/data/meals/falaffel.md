@@ -1,6 +1,6 @@
 ---
 category: hülsenfrüchte
-effort: medium
+effort: hard
 ---
 # Falaffel mit Zimtkarotten
 
