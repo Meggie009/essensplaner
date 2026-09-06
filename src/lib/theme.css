@@ -1,4 +1,4 @@
-/* Fixed style: warm gray background, deep blue text/accent, no borders,
+/* Fixed style: warm gray background, deep red text/accent, no borders,
    no rounded corners. "Boxes" (cards, textareas) are distinguished purely by
    a slightly darker fill than the page background - never by a border. */
 
@@ -7,11 +7,11 @@
   --font-body: 'Archivo', sans-serif;
   --color-bg: #ece9e2;
   --color-surface: #e1ddd2;
-  --color-surface-selected: #d3dbef;
+  --color-surface-selected: #ead7d7;
   --color-border: transparent;
-  --color-accent: #1b3f91;
-  --color-text: #1b3f91;
-  --color-text-muted: #5c6c93;
+  --color-accent: #620b0b;
+  --color-text: #620b0b;
+  --color-text-muted: #8f5a5a;
   --color-accent-contrast: #ffffff;
   --radius: 0px;
   --border-width: 0px;
@@ -25,7 +25,7 @@ body {
 }
 
 /* Checkbox styling shared everywhere in the app - square outline in the
-   text color when unchecked, filled accent blue with a white tick when
+  text color when unchecked, filled accent red with a white tick when
    checked, no rounded corners. */
 input[type='checkbox'] {
   appearance: none;
