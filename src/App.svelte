@@ -260,7 +260,6 @@
   .random-picker {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 0.8rem;
     margin-bottom: 1.2rem;
   }
