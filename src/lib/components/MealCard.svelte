@@ -50,15 +50,17 @@
 >
   <div class="top-row">
     <div class="name">{meal.name}</div>
-    <span
-      class="effort effort-{meal.effort}"
-      aria-label={effortLabel[meal.effort] ?? meal.effort}
-      title={effortLabel[meal.effort] ?? meal.effort}
-    >
-      {#each Array(effortLevel[meal.effort] ?? 0) as dot}
-        <span class="effort-dot"></span>
-      {/each}
-    </span>
+    {#if meal.effort}
+      <span
+        class="effort effort-{meal.effort}"
+        aria-label={effortLabel[meal.effort] ?? meal.effort}
+        title={effortLabel[meal.effort] ?? meal.effort}
+      >
+        {#each Array(effortLevel[meal.effort] ?? 0) as dot}
+          <span class="effort-dot"></span>
+        {/each}
+      </span>
+    {/if}
     <!-- svelte-ignore a11y-label-has-associated-control -->
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->

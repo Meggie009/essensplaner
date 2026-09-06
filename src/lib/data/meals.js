@@ -21,6 +21,7 @@ const files = import.meta.glob('./meals/*.md', {
   import: 'default',
   eager: true
 });
+import weeklyShoppingRaw from './weekly-shopping.md?raw';
 
 const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/;
 const HEADING_RE = /^#\s+(.+)\s*$/m;
@@ -85,6 +86,17 @@ function parseMeal(path, raw) {
   return { id, name, categories, effort, ingredients };
 }
 
+const weeklyShopping = {
+  id: 'weekly-shopping',
+  name: 'Jede Woche',
+  categories: [],
+  effort: null,
+  ingredients: parseIngredients(weeklyShoppingRaw)
+};
+
 export const meals = Object.entries(files)
   .map(([path, raw]) => parseMeal(path, raw))
+  .concat(weeklyShopping)
   .sort((a, b) => a.name.localeCompare(b.name, 'de'));
+
+export { weeklyShopping };

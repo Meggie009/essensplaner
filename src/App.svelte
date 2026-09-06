@@ -1,13 +1,17 @@
 <script>
   import { meals } from './lib/data/meals.js';
+  import { weeklyShopping } from './lib/data/meals.js';
   import { categories } from './lib/data/categories.js';
   import CategorySection from './lib/components/CategorySection.svelte';
+  import MealCard from './lib/components/MealCard.svelte';
   import SelectedMealsPanel from './lib/components/SelectedMealsPanel.svelte';
   import IngredientsPanel from './lib/components/IngredientsPanel.svelte';
   import SelectionBadge from './lib/components/SelectionBadge.svelte';
   import { selectedIds, toggleMeal, clearSelection, selectedMeals, aggregatedIngredients } from './lib/stores/selection.js';
 
   let footerEl;
+  const effortOrder = { easy: 1, medium: 2, hard: 3 };
+
   function jumpToExport() {
     footerEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -17,7 +21,14 @@
     .map(({ key, label }) => ({
       key,
       label,
-      meals: meals.filter((m) => m.categories.includes(key))
+      meals: meals
+        .filter((m) => m.categories.includes(key))
+        .sort(
+          (a, b) =>
+            (effortOrder[a.effort] ?? Number.MAX_SAFE_INTEGER) -
+              (effortOrder[b.effort] ?? Number.MAX_SAFE_INTEGER) ||
+            a.name.localeCompare(b.name, 'de')
+        )
     }))
     .filter((g) => g.meals.length > 0);
 </script>
@@ -25,7 +36,7 @@
 <SelectionBadge count={$selectedMeals.length} onJump={jumpToExport} />
 
 <main>
-  <h1>Essensplan</h1>
+  <h1>Menu</h1>
 
   {#each groups as group (group.key)}
     <CategorySection
@@ -42,6 +53,13 @@
       {#if $selectedMeals.length > 0}
         <button class="clear" on:click={clearSelection}>Auswahl leeren</button>
       {/if}
+    </div>
+    <div class="weekly-shopping">
+      <MealCard
+        meal={weeklyShopping}
+        selected={$selectedIds.has(weeklyShopping.id)}
+        onToggle={toggleMeal}
+      />
     </div>
     <div class="panels">
       <SelectedMealsPanel meals={$selectedMeals} />
@@ -78,6 +96,11 @@
   footer {
     margin-top: 2.5rem;
     padding-top: 1.5rem;
+  }
+
+  .weekly-shopping {
+    margin-top: 0.8rem;
+    margin-bottom: 1rem;
   }
 
   .footer-header {

@@ -1,5 +1,17 @@
 import { writable, derived } from 'svelte/store';
 import { meals } from '../data/meals.js';
+import { categories } from '../data/categories.js';
+
+const categoryOrder = new Map(categories.map(({ key }, index) => [key, index]));
+
+function mealCategoryOrder(meal) {
+  return Math.min(...meal.categories.map((category) => categoryOrder.get(category) ?? Infinity));
+}
+
+function compareSelectedMeals(a, b) {
+  const categoryDifference = mealCategoryOrder(a) - mealCategoryOrder(b);
+  return categoryDifference || a.name.localeCompare(b.name, 'de');
+}
 
 // Set of selected meal ids. No persistence (resets on reload) by design.
 export const selectedIds = writable(new Set());
@@ -82,7 +94,7 @@ export function removeExtraIngredient(mealId, index) {
 }
 
 export const selectedMeals = derived(selectedIds, ($ids) =>
-  meals.filter((m) => $ids.has(m.id))
+  meals.filter((m) => $ids.has(m.id)).sort(compareSelectedMeals)
 );
 
 export const aggregatedIngredients = derived(
