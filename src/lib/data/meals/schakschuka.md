@@ -2,7 +2,8 @@
 category: suppe, gemüse
 effort: easy
 ---
-# Schakschuka
+# Shakshuka
+
 
 - Zwiebel
 - Knoblauch

@@ -10,4 +10,4 @@ effort: easy
 - Reis
 - Knoblauch
 - süße Schlagsahne
-- Tofu - Asia Markt
+- Tofu aus dem Asia Markt
