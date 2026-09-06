@@ -12,7 +12,10 @@
   let footerEl;
   let searchQuery = '';
   let searchTerms = [];
+  let randomMealCount = 4;
+  let randomMealIds = new Set();
   const effortOrder = { easy: 1, medium: 2, hard: 3 };
+  const randomCategoryKeys = new Set(categories.slice(0, 9).map(({ key }) => key));
 
   function jumpToExport() {
     footerEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -20,6 +23,40 @@
 
   function clearSearch() {
     searchQuery = '';
+  }
+
+  function chooseRandomMeal(candidates) {
+    const easyMeals = candidates.filter((meal) => meal.effort === 'easy');
+    const pool = easyMeals.length > 0 && Math.random() < 0.75 ? easyMeals : candidates;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  function selectRandomMeals() {
+    const chosen = [];
+    const usedCategories = new Set();
+    const shuffledCategories = [...randomCategoryKeys].sort(() => Math.random() - 0.5);
+
+    for (const categoryKey of shuffledCategories) {
+      if (chosen.length >= randomMealCount) break;
+
+      const candidates = meals.filter(
+        (meal) =>
+          meal.categories.includes(categoryKey) &&
+          meal.categories.every((category) => randomCategoryKeys.has(category)) &&
+          (meal.effort === 'easy' || meal.effort === 'medium') &&
+          meal.categories.every((category) => !usedCategories.has(category))
+      );
+      if (candidates.length === 0) continue;
+
+      const meal = chooseRandomMeal(candidates);
+      chosen.push(meal);
+      meal.categories.forEach((category) => usedCategories.add(category));
+    }
+
+    clearSearch();
+    clearSelection();
+    selectedIds.set(new Set(chosen.map((meal) => meal.id)));
+    randomMealIds = new Set(chosen.map((meal) => meal.id));
   }
 
   $: searchTerms = searchQuery.trim().toLocaleLowerCase('de').split(/\s+/).filter(Boolean);
@@ -71,13 +108,40 @@
     {/if}
   </div>
 
+    <div class="random-picker">
+      <button class="random-button" type="button" on:click={selectRandomMeals}>Ich weiß nicht</button>
+      <div class="random-count" aria-label="Anzahl zufälliger Gerichte">
+        <button
+          class="count-button"
+          type="button"
+          aria-label="Weniger Gerichte"
+          on:click={() => (randomMealCount = Math.max(1, randomMealCount - 1))}
+          disabled={randomMealCount === 1}
+        >
+          −
+        </button>
+        <span>{randomMealCount}</span>
+        <button
+          class="count-button"
+          type="button"
+          aria-label="Mehr Gerichte"
+          on:click={() => (randomMealCount = Math.min(9, randomMealCount + 1))}
+          disabled={randomMealCount === 9}
+        >
+          +
+        </button>
+      </div>
+    </div>
+
   {#each groups as group (group.key)}
     <CategorySection
       title={group.label}
       meals={group.meals}
       selectedIds={$selectedIds}
       onToggle={toggleMeal}
-      forceOpen={searchTerms.length > 0}
+      forceOpen={
+        searchTerms.length > 0 || group.meals.some((meal) => randomMealIds.has(meal.id))
+      }
     />
   {/each}
 
@@ -191,6 +255,52 @@
   .search-input:focus {
     outline: none;
     border-color: color-mix(in srgb, var(--color-accent) 65%, white);
+  }
+
+  .random-picker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .random-button,
+  .count-button {
+    border: none;
+    border-radius: var(--radius);
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+    font-family: var(--font-body);
+    cursor: pointer;
+  }
+
+  .random-button {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .random-count {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-weight: 600;
+  }
+
+  .count-button {
+    width: 1.65rem;
+    height: 1.65rem;
+    padding: 0;
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  .random-button:disabled,
+  .count-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
   }
 
   footer {
