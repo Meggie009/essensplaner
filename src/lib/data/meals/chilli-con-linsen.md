@@ -11,6 +11,6 @@ effort: hard
 - gehackte Tomaten (2)
 - passierte Tomaten (2)
 - Karotte (3)
-- grüne Bohnen
+- Brechbohnen im Glas
 - rote Bohnen (2)
 - Mais

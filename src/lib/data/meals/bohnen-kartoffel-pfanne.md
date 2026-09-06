@@ -4,7 +4,7 @@ effort: medium
 ---
 # Bohnen-Kartoffel-Pfanne
 
-- grüne Bohnen
+- Brechbohnen im Glas
 - Pilze
 - Kartoffeln
 - Zwiebel
