@@ -1,9 +1,13 @@
 # Jede Woche
 
 - Milch
+- Skyr
 - Haferflocken
 - Äpfel
-- Skyr
-- Butter
 - Obst für Magdalena
 - gefrorene Himbeeren
+- Butter
+- Brot
+- Käse
+- Aufstrich
+
